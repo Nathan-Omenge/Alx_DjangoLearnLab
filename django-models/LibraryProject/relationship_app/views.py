@@ -1,3 +1,4 @@
+from django.contrib.auth import login
 from django.shortcuts import render
 from django.views.generic.detail import DetailView   # 👈 exact string the checker wants
 from .models import Book
