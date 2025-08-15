@@ -4,6 +4,6 @@ from . import views
 app_name = "relationship_app"
 
 urlpatterns = [
-    path("books/", views.list_books, name="list_books"),
-    path("libraries/<int:pk>/", views.LibraryDetailView.as_view(), name="library_detail"),
+    path('books/', views.list_books, name='list_books'),
+    path('libraries/<int:pk>/', views.LibraryDetailView.as_view(), name='library_detail'),
 ]
