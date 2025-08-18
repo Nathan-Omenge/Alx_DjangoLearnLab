@@ -1,6 +1,20 @@
 # advanced_features_and_security/LibraryProject/bookshelf/admin.py
 from django.contrib import admin
-from .models import Book
+from django.contrib.auth.admin import UserAdmin
+from .models import CustomUser, Book
+
+@admin.register(CustomUser)
+class CustomUserAdmin(UserAdmin):
+    # show extra profile fields on the user change page
+    fieldsets = UserAdmin.fieldsets + (
+        ("Profile", {"fields": ("date_of_birth", "profile_photo")}),
+    )
+    # show extra profile fields on the user add page
+    add_fieldsets = UserAdmin.add_fieldsets + (
+        ("Profile", {"fields": ("date_of_birth", "profile_photo")}),
+    )
+    list_display = ("username", "email", "is_staff", "date_of_birth")
+    search_fields = ("username", "email")
 
 @admin.register(Book)
 class BookAdmin(admin.ModelAdmin):
