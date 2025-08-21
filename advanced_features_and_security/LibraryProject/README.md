@@ -7,7 +7,7 @@ A Django web application for library management system - ALX Django Learning Lab
 
 **Objective**: Gain familiarity with Django by setting up a Django development environment and creating a basic Django project. This task introduces the workflow of Django projects, including project creation and running the development server.
 
-## Installation and Setup ✅
+## Installation and Setup 
 
 ### Prerequisites Met
 - Python 3.x installed
@@ -122,22 +122,17 @@ Quit the server with CONTROL-C.
 - **Status**: "The install worked successfully! Congratulations!"
 - **Debug Mode**: Confirmed DEBUG=True in settings
 
-## Task Completion Checklist
+# Security hardening notes
 
-- ✅ **Install Django**: Django 4.2.23 successfully installed
-- ✅ **Create Django Project**: LibraryProject created using `django-admin startproject`
-- ✅ **Navigate to Project**: Successfully moved to project directory
-- ✅ **Create README.md**: Documentation file created
-- ✅ **Run Development Server**: Server started with `python manage.py runserver`
-- ✅ **Open Web Browser**: Accessed http://127.0.0.1:8000/ successfully
-- ✅ **Explore Project Structure**: All key files examined and understood
-  - ✅ **settings.py**: Configuration file analyzed
-  - ✅ **urls.py**: URL routing system understood
-  - ✅ **manage.py**: Command-line utility explored
-  - ✅ **wsgi.py**: WSGI entry point identified
-  - ✅ **asgi.py**: ASGI entry point identified
-
-## Understanding Gained
+- **Settings**
+  - `DEBUG=False`, `SECURE_BROWSER_XSS_FILTER=True`, `SECURE_CONTENT_TYPE_NOSNIFF=True`, `X_FRAME_OPTIONS='DENY'`
+  - `CSRF_COOKIE_SECURE=True`, `SESSION_COOKIE_SECURE=True`
+- **CSP**
+  - `SimpleCSPMiddleware` adds header: `Content-Security-Policy: default-src 'self'`
+- **CSRF in templates**
+  - All forms include `{% csrf_token %}` (see `bookshelf/templates/bookshelf/form_example.html`)
+- **Views & ORM**
+  - `book_search` uses `SearchForm` to validate input and ORM filtering (`title__icontains`) – no raw SQL.
 
 ### Django Project Workflow
 1. **Project Creation**: `django-admin startproject` generates the basic structure
@@ -146,16 +141,4 @@ Quit the server with CONTROL-C.
 4. **URL Routing**: `urls.py` maps URLs to application views
 5. **Management**: `manage.py` provides command-line interface
 
-### Key Concepts Learned
-- **Django Project vs App**: Project contains multiple apps
-- **Settings Configuration**: Central control of Django behavior
-- **URL Patterns**: How Django routes requests to views
-- **Development vs Production**: Current setup for development only
-- **Database Migrations**: Pending migrations noted for future setup
 
-## Next Steps
-
-The LibraryProject foundation is now ready for:
-- Creating Django applications
-- Defining models and databases
-- Building views and

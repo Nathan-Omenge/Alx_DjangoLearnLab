@@ -24,3 +24,23 @@ def list_books_secure(request):
 def book_list(request):
     books = Book.objects.all()
     return render(request, 'bookshelf/book_list.html', {'books': books})
+
+@permission_required("bookshelf.view_book", raise_exception=True)
+def book_search(request):
+    results = None
+    if request.method == "POST":
+        form = SearchForm(request.POST)
+        if form.is_valid():
+            q = form.cleaned_data["q"]
+            if q:
+                results = Book.objects.filter(title__icontains=q)
+            else:
+                results = Book.objects.none()
+    else:
+        form = SearchForm()
+
+    return render(
+        request,
+        "bookshelf/form_example.html",
+        {"form": form, "results": results},
+    )
