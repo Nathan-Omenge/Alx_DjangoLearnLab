@@ -3,7 +3,7 @@ from .views import (
     CustomLoginView, CustomLogoutView, RegisterView, profile_view, home_view,
     PostListView, PostDetailView, PostCreateView, PostUpdateView, PostDeleteView,
     CommentCreateView, CommentUpdateView, CommentDeleteView, add_comment_to_post,
-    SearchView, PostByTagView
+    SearchView, PostByTagListView
 )
 
 urlpatterns = [
@@ -38,5 +38,5 @@ urlpatterns = [
     
     # Search and Tag URLs
     path('search/', SearchView.as_view(), name='search'),
-    path('tags/<str:tag_name>/', PostByTagView.as_view(), name='posts-by-tag'),
+    path('tags/<slug:tag_slug>/', PostByTagListView.as_view(), name='posts-by-tag'),
 ]

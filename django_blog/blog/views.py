@@ -200,17 +200,17 @@ class SearchView(ListView):
         context['search_form'] = SearchForm(initial={'query': context['query']})
         return context
 
-class PostByTagView(ListView):
+class PostByTagListView(ListView):
     model = Post
     template_name = 'blog/posts_by_tag.html'
     context_object_name = 'posts'
     paginate_by = 10
     
     def get_queryset(self):
-        tag_name = self.kwargs.get('tag_name')
-        return Post.objects.filter(tags__name=tag_name).order_by('-published_date')
+        tag_slug = self.kwargs.get('tag_slug')
+        return Post.objects.filter(tags__slug=tag_slug).order_by('-published_date')
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['tag'] = get_object_or_404(Tag, name=self.kwargs.get('tag_name'))
+        context['tag'] = get_object_or_404(Tag, slug=self.kwargs.get('tag_slug'))
         return context
