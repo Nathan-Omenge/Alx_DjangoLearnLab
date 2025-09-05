@@ -8,8 +8,9 @@ from django.urls import reverse_lazy
 from django.contrib import messages
 from django.shortcuts import get_object_or_404
 from .forms import CustomUserCreationForm, UserProfileForm, PostForm, CommentForm, SearchForm
-from .models import Post, Comment, Tag
+from .models import Post, Comment
 from django.db.models import Q
+from taggit.models import Tag
 
 class CustomLoginView(LoginView):
     template_name = 'blog/login.html'

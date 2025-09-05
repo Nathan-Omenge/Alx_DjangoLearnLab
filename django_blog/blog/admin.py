@@ -1,18 +1,11 @@
 from django.contrib import admin
-from .models import Post, Comment, Tag
-
-@admin.register(Tag)
-class TagAdmin(admin.ModelAdmin):
-    list_display = ['name']
-    search_fields = ['name']
-    ordering = ['name']
+from .models import Post, Comment
 
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
     list_display = ['title', 'author', 'published_date']
-    list_filter = ['published_date', 'author', 'tags']
+    list_filter = ['published_date', 'author']
     search_fields = ['title', 'content']
-    filter_horizontal = ['tags']
     date_hierarchy = 'published_date'
 
 @admin.register(Comment)
