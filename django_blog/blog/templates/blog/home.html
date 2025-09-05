@@ -5,12 +5,79 @@
 {% block content %}
 <div class="row">
     <div class="col-md-8">
-        <h1>Welcome to Django Blog</h1>
+        <div class="jumbotron bg-primary text-white p-5 rounded mb-4">
+            <h1 class="display-4">Welcome to Django Blog</h1>
+            {% if user.is_authenticated %}
+                <p class="lead">Hello, {{ user.username }}! Ready to share your thoughts with the world?</p>
+                <a href="{% url 'post-create' %}" class="btn btn-light btn-lg">Write New Post</a>
+                <a href="{% url 'post-list' %}" class="btn btn-outline-light btn-lg ms-2">View All Posts</a>
+            {% else %}
+                <p class="lead">Share your thoughts, connect with others, and explore amazing content.</p>
+                <a href="{% url 'register' %}" class="btn btn-light btn-lg">Get Started</a>
+                <a href="{% url 'post-list' %}" class="btn btn-outline-light btn-lg ms-2">Browse Posts</a>
+            {% endif %}
+        </div>
+
+        <h2>Recent Posts</h2>
+        <div class="row">
+            <!-- Recent posts will be loaded here -->
+            <div class="col-12">
+                <p class="text-muted">
+                    <a href="{% url 'post-list' %}" class="text-decoration-none">View all posts &rarr;</a>
+                </p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5>Getting Started</h5>
+            </div>
+            <div class="card-body">
+                {% if user.is_authenticated %}
+                    <h6 class="card-title">Welcome back!</h6>
+                    <p class="card-text">You can now create, edit, and manage your blog posts.</p>
+                    <ul class="list-unstyled">
+                        <li><i class="fas fa-check text-success"></i> Create new posts</li>
+                        <li><i class="fas fa-check text-success"></i> Edit your posts</li>
+                        <li><i class="fas fa-check text-success"></i> Delete your posts</li>
+                        <li><i class="fas fa-check text-success"></i> Manage your profile</li>
+                    </ul>
+                {% else %}
+                    <h6 class="card-title">Join Our Community</h6>
+                    <p class="card-text">Sign up today to start writing and sharing your thoughts!</p>
+                    <ul class="list-unstyled">
+                        <li><i class="fas fa-edit text-primary"></i> Write blog posts</li>
+                        <li><i class="fas fa-users text-primary"></i> Connect with authors</li>
+                        <li><i class="fas fa-comments text-primary"></i> Engage with content</li>
+                        <li><i class="fas fa-user text-primary"></i> Manage your profile</li>
+                    </ul>
+                    <a href="{% url 'register' %}" class="btn btn-primary">Sign Up Now</a>
+                {% endif %}
+            </div>
+        </div>
+        
         {% if user.is_authenticated %}
-            <p>Hello, {{ user.username }}! Welcome back to your blog.</p>
-        {% else %}
-            <p>Please <a href="{% url 'login' %}">login</a> or <a href="{% url 'register' %}">register</a> to get started.</p>
+            <div class="card mt-3">
+                <div class="card-header">
+                    <h6>Quick Stats</h6>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">
+                        <strong>Your Posts:</strong> {{ user.blog_posts.count }}<br>
+                        <strong>Member Since:</strong> {{ user.date_joined|date:"M Y" }}
+                    </p>
+                    <a href="{% url 'profile' %}" class="btn btn-sm btn-outline-primary">View Profile</a>
+                </div>
+            </div>
         {% endif %}
     </div>
 </div>
+
+<style>
+.jumbotron {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+</style>
 {% endblock %}

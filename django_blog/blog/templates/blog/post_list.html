@@ -1,0 +1,86 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}Blog Posts - Django Blog{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Blog Posts</h1>
+    {% if user.is_authenticated %}
+        <a href="{% url 'post-create' %}" class="btn btn-primary">
+            <i class="fas fa-plus"></i> New Post
+        </a>
+    {% endif %}
+</div>
+
+{% if posts %}
+    {% for post in posts %}
+        <div class="card mb-4">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div class="flex-grow-1">
+                        <h5 class="card-title">
+                            <a href="{% url 'post-detail' post.pk %}" class="text-decoration-none">
+                                {{ post.title }}
+                            </a>
+                        </h5>
+                        <p class="card-text text-muted">{{ post.content|truncatewords:30 }}</p>
+                        <small class="text-muted">
+                            By {{ post.author.username }} on {{ post.published_date|date:"M d, Y" }}
+                        </small>
+                    </div>
+                    {% if user == post.author %}
+                        <div class="dropdown">
+                            <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                Actions
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="{% url 'post-update' post.pk %}">Edit</a></li>
+                                <li><a class="dropdown-item text-danger" href="{% url 'post-delete' post.pk %}">Delete</a></li>
+                            </ul>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+
+    <!-- Pagination -->
+    {% if is_paginated %}
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center">
+                {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page=1">First</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                    </li>
+                {% endif %}
+                
+                <li class="page-item active">
+                    <span class="page-link">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+                </li>
+                
+                {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+    {% endif %}
+{% else %}
+    <div class="text-center py-5">
+        <h3 class="text-muted">No blog posts yet</h3>
+        {% if user.is_authenticated %}
+            <p>Be the first to write a post!</p>
+            <a href="{% url 'post-create' %}" class="btn btn-primary">Write Your First Post</a>
+        {% else %}
+            <p><a href="{% url 'login' %}">Login</a> to start writing posts.</p>
+        {% endif %}
+    </div>
+{% endif %}
+{% endblock %}
