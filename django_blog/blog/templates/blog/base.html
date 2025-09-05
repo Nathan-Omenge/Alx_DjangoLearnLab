@@ -16,6 +16,14 @@
                     <a class="nav-link" href="{% url 'post-create' %}">New Post</a>
                 {% endif %}
             </div>
+            
+            <!-- Search Form -->
+            <form class="d-flex me-3" method="get" action="{% url 'search' %}">
+                <input class="form-control me-2" type="search" name="query" placeholder="Search posts..." aria-label="Search" style="width: 200px;">
+                <button class="btn btn-outline-light" type="submit">
+                    <i class="fas fa-search"></i>
+                </button>
+            </form>
             <div class="navbar-nav ms-auto">
                 {% if user.is_authenticated %}
                     <span class="navbar-text me-3">Hello, {{ user.username }}!</span>

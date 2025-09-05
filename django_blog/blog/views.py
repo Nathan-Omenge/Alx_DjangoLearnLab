@@ -7,8 +7,9 @@ from django.views.generic import CreateView, ListView, DetailView, UpdateView, D
 from django.urls import reverse_lazy
 from django.contrib import messages
 from django.shortcuts import get_object_or_404
-from .forms import CustomUserCreationForm, UserProfileForm, PostForm, CommentForm
-from .models import Post, Comment
+from .forms import CustomUserCreationForm, UserProfileForm, PostForm, CommentForm, SearchForm
+from .models import Post, Comment, Tag
+from django.db.models import Q
 
 class CustomLoginView(LoginView):
     template_name = 'blog/login.html'
@@ -174,3 +175,41 @@ class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     def delete(self, request, *args, **kwargs):
         messages.success(self.request, 'Comment deleted successfully!')
         return super().delete(request, *args, **kwargs)
+
+# Search and Tag Views
+class SearchView(ListView):
+    model = Post
+    template_name = 'blog/search_results.html'
+    context_object_name = 'posts'
+    paginate_by = 10
+    
+    def get_queryset(self):
+        query = self.request.GET.get('query')
+        if query:
+            return Post.objects.filter(
+                Q(title__icontains=query) |
+                Q(content__icontains=query) |
+                Q(tags__name__icontains=query)
+            ).distinct().order_by('-published_date')
+        return Post.objects.none()
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['query'] = self.request.GET.get('query', '')
+        context['search_form'] = SearchForm(initial={'query': context['query']})
+        return context
+
+class PostByTagView(ListView):
+    model = Post
+    template_name = 'blog/posts_by_tag.html'
+    context_object_name = 'posts'
+    paginate_by = 10
+    
+    def get_queryset(self):
+        tag_name = self.kwargs.get('tag_name')
+        return Post.objects.filter(tags__name=tag_name).order_by('-published_date')
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['tag'] = get_object_or_404(Tag, name=self.kwargs.get('tag_name'))
+        return context
