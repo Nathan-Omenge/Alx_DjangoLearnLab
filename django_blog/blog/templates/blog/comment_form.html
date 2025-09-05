@@ -1,0 +1,91 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}
+    {% if form.instance.pk %}
+        Edit Comment - Django Blog
+    {% else %}
+        Add Comment - Django Blog
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="text-center">
+                    {% if form.instance.pk %}
+                        Edit Comment
+                    {% else %}
+                        Add Comment to "{{ post.title }}"
+                    {% endif %}
+                </h3>
+            </div>
+            <div class="card-body">
+                {% if post %}
+                    <div class="alert alert-light mb-3">
+                        <h6><strong>{{ post.title }}</strong></h6>
+                        <p class="mb-0 text-muted">{{ post.content|truncatewords:20 }}</p>
+                        <small class="text-muted">by {{ post.author.username }}</small>
+                    </div>
+                {% endif %}
+                
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    {% if form.errors %}
+                        <div class="alert alert-danger">
+                            <h6>Please correct the errors below:</h6>
+                            {{ form.errors }}
+                        </div>
+                    {% endif %}
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.content.id_for_label }}" class="form-label">
+                            <strong>Your Comment</strong>
+                        </label>
+                        {{ form.content }}
+                        {% if form.content.help_text %}
+                            <div class="form-text">{{ form.content.help_text }}</div>
+                        {% endif %}
+                        {% if form.content.errors %}
+                            <div class="text-danger">
+                                {% for error in form.content.errors %}
+                                    <small>{{ error }}</small><br>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                        <div class="form-text">Maximum 1000 characters</div>
+                    </div>
+                    
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        {% if form.instance.pk %}
+                            <a href="{% url 'post-detail' form.instance.post.pk %}" class="btn btn-secondary me-md-2">Cancel</a>
+                        {% else %}
+                            <a href="{% url 'post-detail' post.pk %}" class="btn btn-secondary me-md-2">Cancel</a>
+                        {% endif %}
+                        <button type="submit" class="btn btn-primary">
+                            {% if form.instance.pk %}
+                                Update Comment
+                            {% else %}
+                                Post Comment
+                            {% endif %}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.form-control:focus {
+    border-color: #80bdff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+.alert-light {
+    background-color: #f8f9fa;
+    border-color: #dee2e6;
+}
+</style>
+{% endblock %}
