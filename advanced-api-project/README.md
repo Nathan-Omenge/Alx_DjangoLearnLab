@@ -188,6 +188,116 @@ BookListView includes comprehensive querying capabilities:
 
 Create test data and users through Django admin interface or shell for comprehensive testing of authenticated endpoints.
 
+## Advanced Query Features
+
+### Filtering, Searching, and Ordering Implementation
+
+The BookListView implements comprehensive filtering, searching, and ordering capabilities using Django REST Framework's built-in filter backends.
+
+#### Filtering with DjangoFilterBackend
+
+Filter books by exact matches on specific fields:
+
+```bash
+# Filter by exact title match
+curl -X GET "http://127.0.0.1:8000/api/books/?title=Harry Potter and the Sorcerers Stone"
+
+# Filter by author ID
+curl -X GET "http://127.0.0.1:8000/api/books/?author=1"
+
+# Filter by publication year
+curl -X GET "http://127.0.0.1:8000/api/books/?publication_year=1997"
+
+# Combine multiple filters
+curl -X GET "http://127.0.0.1:8000/api/books/?author=1&publication_year=1997"
+```
+
+#### Search Functionality with SearchFilter
+
+Perform text searches across title and author name fields:
+
+```bash
+# Search for books containing "Potter" in title or author name
+curl -X GET "http://127.0.0.1:8000/api/books/?search=Potter"
+
+# Search for books containing "Harry" in title or author name
+curl -X GET "http://127.0.0.1:8000/api/books/?search=Harry"
+
+# Search for author names
+curl -X GET "http://127.0.0.1:8000/api/books/?search=Rowling"
+```
+
+#### Ordering with OrderingFilter
+
+Sort results by any field in ascending or descending order:
+
+```bash
+# Order by title (ascending - default)
+curl -X GET "http://127.0.0.1:8000/api/books/?ordering=title"
+
+# Order by title (descending)
+curl -X GET "http://127.0.0.1:8000/api/books/?ordering=-title"
+
+# Order by publication year (ascending)
+curl -X GET "http://127.0.0.1:8000/api/books/?ordering=publication_year"
+
+# Order by publication year (descending)
+curl -X GET "http://127.0.0.1:8000/api/books/?ordering=-publication_year"
+
+# Order by author name
+curl -X GET "http://127.0.0.1:8000/api/books/?ordering=author__name"
+
+# Multiple ordering criteria
+curl -X GET "http://127.0.0.1:8000/api/books/?ordering=author__name,publication_year"
+```
+
+#### Combined Query Examples
+
+Combine filtering, searching, and ordering in a single request:
+
+```bash
+# Search for "Potter" books and order by publication year
+curl -X GET "http://127.0.0.1:8000/api/books/?search=Potter&ordering=publication_year"
+
+# Filter by author and order by title descending
+curl -X GET "http://127.0.0.1:8000/api/books/?author=1&ordering=-title"
+
+# Search, filter by year, and order by title
+curl -X GET "http://127.0.0.1:8000/api/books/?search=Harry&publication_year=1997&ordering=title"
+```
+
+#### Implementation Details
+
+The filtering, searching, and ordering functionality is implemented in the BookListView with the following configuration:
+
+```python
+class BookListView(generics.ListAPIView):
+    queryset = Book.objects.all()
+    serializer_class = BookSerializer
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+    
+    # Filtering configuration
+    filterset_fields = ['title', 'author', 'publication_year']
+    
+    # Search configuration
+    search_fields = ['title', 'author__name']
+    
+    # Ordering configuration
+    ordering_fields = ['title', 'publication_year', 'author__name']
+    ordering = ['title']  # Default ordering
+```
+
+**Filter Backends Used:**
+- **DjangoFilterBackend**: Enables exact-match filtering on specified fields
+- **SearchFilter**: Enables text-based searching across specified fields
+- **OrderingFilter**: Enables sorting by specified fields in ascending/descending order
+
+**Default Behavior:**
+- Results are ordered by title (ascending) by default
+- All users can use filtering, searching, and ordering (no authentication required for read operations)
+- Search is case-insensitive and supports partial matches
+- Filtering requires exact matches for the specified field values
+
 ## Architecture Notes
 
 - **Generic Views**: Leverages DRF's built-in generic views for standard CRUD operations
