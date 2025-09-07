@@ -115,6 +115,8 @@ class BookAPITestCase(APITestCase):
         
         Verifies successful book creation with valid data.
         """
+        # Alternative authentication method using login
+        self.client.login(username='testuser', password='testpass123')
         self.client.force_authenticate(user=self.user)
         book_data = {
             'title': 'Animal Farm',
