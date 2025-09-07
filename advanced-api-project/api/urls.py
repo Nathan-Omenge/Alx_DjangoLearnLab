@@ -11,9 +11,9 @@ urlpatterns = [
     # Book create view - POST /books/create/
     path('books/create/', views.BookCreateView.as_view(), name='book-create'),
     
-    # Book update view - PUT/PATCH /books/{id}/update/
-    path('books/<int:pk>/update/', views.BookUpdateView.as_view(), name='book-update'),
+    # Book update view - PUT/PATCH /books/update/
+    path('books/update/', views.BookUpdateView.as_view(), name='book-update'),
     
-    # Book delete view - DELETE /books/{id}/delete/
-    path('books/<int:pk>/delete/', views.BookDeleteView.as_view(), name='book-delete'),
+    # Book delete view - DELETE /books/delete/
+    path('books/delete/', views.BookDeleteView.as_view(), name='book-delete'),
 ]
