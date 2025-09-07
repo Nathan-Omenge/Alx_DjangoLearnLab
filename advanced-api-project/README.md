@@ -298,6 +298,35 @@ class BookListView(generics.ListAPIView):
 - Search is case-insensitive and supports partial matches
 - Filtering requires exact matches for the specified field values
 
+## Testing
+
+### Running Tests
+
+Execute the comprehensive unit test suite:
+
+```bash
+python manage.py test api
+```
+
+### Test Coverage
+
+The test suite includes:
+
+- **CRUD Operations**: Create, Read operations for Books
+- **Authentication & Permissions**: Authenticated vs unauthenticated access
+- **Custom Validation**: Publication year validation
+- **Filtering**: Filter by title, author, publication year
+- **Search**: Text search across titles and author names
+- **Ordering**: Sort by multiple fields in both directions
+- **Serialization**: Author model with nested books
+
+### Test Structure
+
+Tests are located in `/api/test_views.py` and include:
+- `BookAPITestCase`: Comprehensive API endpoint testing
+- `AuthorAPITestCase`: Author serialization with nested books
+- `BookSerializerTestCase`: Custom serializer validation
+
 ## Architecture Notes
 
 - **Generic Views**: Leverages DRF's built-in generic views for standard CRUD operations
@@ -305,5 +334,6 @@ class BookListView(generics.ListAPIView):
 - **Serializer Integration**: Seamless integration between models, serializers, and views
 - **Permission Classes**: Flexible permission system using DRF's built-in classes
 - **Filter Integration**: Advanced querying capabilities through django-filter integration
+- **Test Coverage**: Comprehensive unit tests ensure API reliability and correctness
 
 This implementation demonstrates best practices for building scalable, maintainable REST APIs with Django REST Framework.
